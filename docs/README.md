@@ -1,31 +1,51 @@
-#  Next.js MVP Blog 
+# Next.js Practice Blog (Basic)
 
-Một nền tảng blog cá nhân theo hướng tối giản (Minimalism) và tối ưu hiệu suất. Dự án được xây dựng để ghi lại và chia sẻ các kiến thức về Web Development, Data Science, kỹ thuật mạng lưới và hành trình xây dựng các dự án Startup.
+Đây là tài liệu tổng quan cho bài tập thực hành Next.js mức cơ bản, tập trung vào App Router, layout dùng chung, và dynamic route cho trang chi tiết bài viết.
 
-Dự án này đóng vai trò là một MVP (Minimum Viable Product), tập trung vào trải nghiệm đọc, tốc độ tải trang cực nhanh (SSG/SSR) và tối ưu hóa SEO.
+## Mục tiêu
 
-##  Tính năng nổi bật (Features)
+- Làm quen với cấu trúc dự án Next.js App Router.
+- Xây dựng luồng điều hướng giữa các trang cơ bản.
+- Render danh sách bài viết từ dữ liệu giả hoặc file tĩnh đơn giản.
+- Đọc tham số `id` để hiển thị đúng bài viết chi tiết.
 
-- **Tốc độ siêu tốc:** Được xây dựng trên Next.js App Router với React Server Components.
-- **Quản lý nội dung bằng Markdown:** Hỗ trợ viết bài bằng MDX, cho phép nhúng trực tiếp các React component vào bài viết.
-- **Thiết kế Tối giản & Hiện đại:** Giao diện được styling bằng Tailwind CSS, hỗ trợ responsive hoàn hảo trên mọi thiết bị.
-- **Tối ưu SEO:** Tự động tạo metadata, Open Graph tags cho từng bài viết.
-- **Chế độ hiển thị:** Hỗ trợ Dark/Light mode thân thiện với mắt người đọc.
+## Phạm vi bài tập
 
-##  Tech Stack
+Trong phạm vi:
+- 3 trang chính: Trang chủ (`/`), Danh sách blog (`/blog`), Chi tiết bài viết (`/blog/[id]`).
+- Có `Navbar` dùng chung để chuyển trang.
+- Giao diện rõ ràng, dễ đọc, bố cục gọn.
+
+Ngoài phạm vi:
+- Database, đăng nhập, phân quyền.
+- SEO nâng cao (OG/Twitter Card/sitemap/robots).
+- Dark/Light mode, search/filter/pagination.
+
+## Tech Stack
 
 - **Framework:** [Next.js](https://nextjs.org/) (App Router)
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-- **Content:** MDX (Markdown + JSX)
-- **Deployment:** [Vercel](https://vercel.com/) (Khuyên dùng)
+- **Styling:** CSS cơ bản hoặc [Tailwind CSS](https://tailwindcss.com/)
+- **Data source:** Mock Data hoặc file tĩnh đơn giản
 
-## Cấu trúc Thư mục Chính
+## Cấu trúc thư mục tham chiếu
 
 ```text
-next-blog-mvp/
+next-blog-web/
 ├── src/
-│   ├── app/          # Chứa các route chính của Next.js (Home, Blog, About)
-│   ├── components/   # Các UI Component dùng chung (Navbar, Footer, PostCard)
-│   ├── content/      # Nơi lưu trữ toàn bộ các bài viết dạng .mdx
-│   └── lib/          # Các hàm tiện ích (VD: đọc/parse file MDX)
-└── public/           # Chứa các tài nguyên tĩnh (Hình ảnh, favicon)
+│   ├── app/
+│   │   ├── layout.tsx           # Layout chung + Navbar/Footer
+│   │   ├── page.tsx             # Trang chủ
+│   │   └── blog/
+│   │       ├── page.tsx         # Danh sách bài viết
+│   │       └── [id]/page.tsx    # Chi tiết bài viết
+│   ├── components/
+│   │   ├── layout/
+│   │   └── blog/
+│   └── data/                    # Mock data cho bài viết
+└── public/
+```
+
+## Tài liệu liên quan
+
+- Chi tiết yêu cầu chức năng: `docs/SRS.md`
+- Gợi ý giao diện: `docs/UI_Design_Guideline.md`
