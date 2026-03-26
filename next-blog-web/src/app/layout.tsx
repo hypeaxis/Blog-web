@@ -28,9 +28,12 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-white text-black">
         <Navbar />
-        {children}
+        <div className="flex-1">{children}</div>
+        <footer className="border-t border-gray-200 px-6 py-6 text-center text-xs uppercase tracking-wide text-gray-500 sm:px-10">
+          © 2026 Blog. All rights reserved.
+        </footer>
       </body>
     </html>
   );

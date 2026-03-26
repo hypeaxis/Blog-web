@@ -15,13 +15,22 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   }
 
   return (
-    <main className="container mx-auto max-w-3xl px-4 py-10">
-      <Link href="/blog" className="text-blue-600 hover:underline">
-        ← Quay lại danh sách
+    <main className="mx-auto w-full max-w-7xl px-6 py-12 sm:px-10 sm:py-16">
+      <Link
+        href="/blog"
+        className="text-sm font-medium uppercase tracking-wide hover:underline"
+      >
+        ← Quay lại
       </Link>
-      <h1 className="mt-4 text-3xl font-bold">{post.title}</h1>
-      <time className="mt-2 block text-sm text-gray-600">{post.date}</time>
-      <article className="mt-6 space-y-4 text-gray-800">
+
+      <header className="mt-8 border-b border-gray-200 pb-8 sm:pb-10">
+        <h1 className="max-w-5xl text-4xl font-bold tracking-tight leading-tight sm:text-5xl lg:text-7xl">
+          {post.title}
+        </h1>
+        <time className="mt-4 block text-sm text-gray-500">{post.date}</time>
+      </header>
+
+      <article className="mt-10 max-w-3xl space-y-6 text-lg leading-relaxed text-gray-900 sm:text-xl">
         {post.content.map((paragraph) => (
           <p key={paragraph}>{paragraph}</p>
         ))}
