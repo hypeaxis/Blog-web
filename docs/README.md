@@ -6,21 +6,26 @@ Thư mục `docs/` chứa tài liệu đặc tả và guideline giao diện cho 
 
 - Chuẩn hóa yêu cầu chức năng và phạm vi bài tập.
 - Đồng bộ UI guideline với những gì đã triển khai trong app.
+- Mở rộng chức năng: Tích hợp luồng Xác thực người dùng (Authentication) hoàn chỉnh về mặt giao diện và Session logic.
 - Giúp theo dõi phạm vi hiện tại trước khi mở rộng thêm tính năng.
 
-## Trạng thái triển khai hiện tại
+## Trạng thái triển khai
 
-- Các route đang có: `/`, `/about`, `/blog`, `/blog/[id]`, `/_not-found`.
-- Layout dùng chung có `Navbar` + `Footer`.
+- **Routes nội dung:** `/`, `/about`, `/blog`, `/blog/[id]`, `/_not-found`.
+- **Routes xác thực (New):** `/login`, `/register`.
+- Layout dùng chung có `Navbar` + `Footer`. Navbar đã hỗ trợ hiển thị trạng thái đăng nhập/đăng xuất.
 - Trang chủ và trang blog áp dụng layout 2 cột (main + sidebar).
-- Sidebar gồm search UI, popular posts, categories.
-- Dữ liệu đang dùng Mock Data nội bộ.
+- Form đăng nhập/đăng ký áp dụng layout 1 cột, center card.
+- Dữ liệu đang dùng Mock Data nội bộ cho cả Bài viết (`mockPosts`) và Người dùng (`mockUsers`).
+- Xử lý Session thông qua NextAuth.js.
 
 ## Tech stack
 
-- Next.js App Router
+- Next.js App Router (v16)
 - React + TypeScript
 - Tailwind CSS v4
+- **NextAuth.js (Auth.js) cho Authentication**
+- Lucide React (Icons)
 
 ## Tài liệu liên quan
 

@@ -5,7 +5,8 @@ export default function AboutPage() {
         About
       </h1>
       <p className="mt-6 text-lg leading-relaxed text-gray-700">
-        Đây là dự án blog cá nhân được xây dựng bằng Next.js 13, nhằm mục đích học tập và thực hành các tính năng mới của framework này. Nội dung của blog sẽ xoay quanh các chủ đề về lập trình, công nghệ và phát triển web.
+        Đây là dự án blog cá nhân được xây dựng bằng Next.js 13, nhằm mục đích học tập và thực hành các tính năng mới của framework này. 
+        Nội dung của blog sẽ xoay quanh các chủ đề về lập trình, công nghệ và phát triển web.
       </p>
     </main>
   );
