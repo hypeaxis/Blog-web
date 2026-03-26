@@ -1,55 +1,93 @@
-# Tài liệu Yêu cầu Bài tập - Dự án Blog Web Cơ bản (Next.js)
+# SRS - Blog Web thực hành (Next.js App Router)
 
-## 1. Giới thiệu dự án
-### 1.1. Mục đích
-Dự án này là một bài tập thực hành nhỏ dành cho người mới bắt đầu học Next.js. Mục tiêu chính là làm quen với kiến trúc **App Router**, cách tạo các trang tĩnh, dynamic routing (định tuyến động) và cách tổ chức layout cơ bản.
+## 1. Giới thiệu
+### 1.1 Mục tiêu
+Dự án là bài tập thực hành Next.js nhằm rèn luyện:
+- Kiến trúc App Router.
+- Tổ chức layout/component tái sử dụng.
+- Dynamic routing cho trang chi tiết bài viết.
+- Dàn trang theo phong cách **Minimalist Professional**.
 
-### 1.2. Phạm vi dự án
-Bài tập chỉ yêu cầu xây dựng chính xác **3 trang web** liên kết với nhau.
-- **Có trong phạm vi:** Tạo giao diện cơ bản, hiển thị dữ liệu bài viết giả (Mock Data) hoặc đọc file tĩnh đơn giản, có khả năng click chuyển trang qua lại mượt mà.
-- **Nằm ngoài phạm vi:** Không yêu cầu kết nối Database, không cần đăng nhập, không yêu cầu tối ưu SEO, phân trang, bộ lọc tìm kiếm hay giao diện phức tạp (Dark/Light mode).
+### 1.2 Phạm vi
+Trong phạm vi hiện tại:
+- Render nội dung blog từ Mock Data.
+- Điều hướng giữa các trang bằng Link client-side.
+- Layout responsive 1 cột/2 cột tùy trang.
+- Sidebar hiển thị search UI, popular posts, categories.
+
+Ngoài phạm vi:
+- Database/CMS thực tế.
+- Chức năng tìm kiếm, lọc, phân trang backend (chỉ có UI pagination).
+- Upload ảnh thật, quản trị nội dung, phân quyền người dùng.
 
 ## 2. Công nghệ sử dụng
-- **Framework:** Next.js (App Router).
-- **Styling:** CSS cơ bản hoặc Tailwind CSS (chỉ dùng các class cơ bản để dàn trang, tạo lưới).
-- **Nguồn dữ liệu:** Dùng mảng Object JavaScript (Mock Data) lưu trực tiếp trong code để thực hành.
+- **Framework:** Next.js 16 (App Router, TypeScript).
+- **UI:** Tailwind CSS v4.
+- **Data:** Mock Data nội bộ (`src/data/mockPosts.ts`).
+- **Auth Route:** Có route khung `api/auth/[...nextauth]` (chưa mở rộng nghiệp vụ trong phạm vi bài tập UI).
 
-## 3. Yêu cầu Chức năng (Functional Requirements)
+## 3. Yêu cầu chức năng
 
-Hệ thống bao gồm 3 trang chính:
+### 3.1 Trang chủ (`/`)
+- Hiển thị phần giới thiệu ngắn về dự án.
+- Hiển thị nhóm bài viết nổi bật (featured posts).
+- Hiển thị danh sách bài viết gần đây (recent posts).
+- Có CTA dẫn tới trang danh sách blog.
+- Trên desktop: layout 2 cột (main content + sidebar).
 
-### 3.1. Trang chủ (Homepage - `/`)
-- Hiển thị lời chào mừng (Ví dụ: "Chào mừng đến với Blog thực hành của tôi").
-- Một đoạn giới thiệu ngắn về bản thân.
-- Có một nút (Button) hoặc đường link (Link) nổi bật để người dùng bấm chuyển sang trang Danh sách bài viết.
+### 3.2 Trang danh sách blog (`/blog`)
+- Hiển thị toàn bộ danh sách bài viết từ Mock Data.
+- Mỗi bài viết hiển thị: tiêu đề, ngày đăng, tác giả (meta), excerpt, tags.
+- Có cụm nút phân trang giao diện: “Trang trước”, “Trang sau” (UI-only).
+- Có sidebar ở cột phải: search UI, popular posts, categories.
 
-### 3.2. Trang Danh sách Blog (Blog List - `/blog`)
-- Hiển thị danh sách các bài viết hiện có.
-- Dữ liệu mỗi bài viết cần hiển thị tối thiểu: Tiêu đề, một đoạn mô tả ngắn, và ngày tháng.
-- Khi người dùng click vào Tiêu đề của một bài viết, hệ thống sẽ chuyển hướng sang Trang Chi tiết của bài viết đó.
+### 3.3 Trang chi tiết bài viết (`/blog/[id]`)
+- Đọc `id` từ URL để render đúng bài viết.
+- Hiển thị header bài viết: tiêu đề, ngày đăng, tác giả.
+- Hiển thị nội dung chi tiết theo từng đoạn.
+- Có nút “Quay lại danh sách”.
+- Có footer bài viết: tags và nhóm nút chia sẻ (UI-only).
+- Nếu không có bài viết theo `id`, trả về trang 404.
 
-### 3.3. Trang Chi tiết Bài viết (Blog Detail - `/blog/[id]`)
-- Đọc tham số trên URL (id) để hiển thị đúng nội dung của bài viết được chọn.
-- Nội dung bao gồm: Tiêu đề bài viết (to, rõ ràng), Ngày đăng, và Nội dung chi tiết (các đoạn văn bản).
-- Bắt buộc có một nút "Quay lại danh sách" để trở về trang Blog List.
+### 3.4 Trang About (`/about`)
+- Hiển thị mô tả ngắn về dự án/blog.
 
-## 4. Yêu cầu Giao diện & Trải nghiệm (UI/UX)
-- Có một thanh điều hướng chung (Navbar) xuất hiện ở tất cả các trang, chứa link bấm về "Trang chủ" và "Blog".
-- Bố cục (Layout) gọn gàng, nội dung căn giữa màn hình để dễ đọc.
-- Không yêu cầu phải đẹp xuất sắc, nhưng các thành phần (tiêu đề, đoạn văn, link) phải phân biệt rõ ràng.
+### 3.5 Trang 404 (`/_not-found`)
+- Hiển thị thông báo không tìm thấy trang và link quay về trang chủ.
 
-## 5. Cấu trúc Thư mục Thực hành (Cơ bản)
+## 4. Yêu cầu UI/UX
+- Phong cách tối giản chuyên nghiệp, nền sáng, chữ rõ ràng.
+- Navbar trên cùng: logo blog, menu điều hướng, search icon, social links.
+- Footer chung toàn site: bản quyền + “Powered by Next.js”.
+- Màu nhấn dùng tông đỏ/cam cho CTA và trạng thái hover quan trọng.
+- Responsive:
+  - Mobile: ưu tiên 1 cột.
+  - Desktop: trang chủ và blog list dùng 2 cột.
+
+## 5. Cấu trúc thư mục chính
 
 ```text
-my-practice-blog/
-├─ app/
-│  ├─ layout.tsx              # Chứa Navbar và giao diện chung
-│  ├─ page.tsx                # 1. Trang chủ (Homepage)
-│  ├─ globals.css             # File CSS cấu hình cơ bản
-│  └─ blog/
-│     ├─ page.tsx             # 2. Trang danh sách bài viết (Blog List)
-│     └─ [id]/
-│        └─ page.tsx          # 3. Trang chi tiết bài viết (Blog Detail)
-│
-└─ data/
-   └─ mockPosts.ts            # Nơi chứa mảng dữ liệu giả các bài blog
+next-blog-web/
+├─ src/
+│  ├─ app/
+│  │  ├─ layout.tsx
+│  │  ├─ page.tsx
+│  │  ├─ about/page.tsx
+│  │  ├─ not-found.tsx
+│  │  ├─ blog/
+│  │  │  ├─ page.tsx
+│  │  │  └─ [id]/page.tsx
+│  │  └─ api/auth/[...nextauth]/route.ts
+│  ├─ components/
+│  │  ├─ layout/Navbar.tsx
+│  │  └─ blog/
+│  │     ├─ PostCard.tsx
+│  │     └─ BlogSidebar.tsx
+│  └─ data/
+│     ├─ mockPosts.ts
+│     └─ postUi.ts
+└─ docs/
+   ├─ README.md
+   ├─ SRS.md
+   └─ UI_Design_Guideline.md
+```

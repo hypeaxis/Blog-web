@@ -1,51 +1,29 @@
-# Next.js Practice Blog (Basic)
+# Tài liệu dự án Blog Web (Next.js)
 
-Đây là tài liệu tổng quan cho bài tập thực hành Next.js mức cơ bản, tập trung vào App Router, layout dùng chung, và dynamic route cho trang chi tiết bài viết.
+Thư mục `docs/` chứa tài liệu đặc tả và guideline giao diện cho codebase `next-blog-web`.
 
 ## Mục tiêu
 
-- Làm quen với cấu trúc dự án Next.js App Router.
-- Xây dựng luồng điều hướng giữa các trang cơ bản.
-- Render danh sách bài viết từ dữ liệu giả hoặc file tĩnh đơn giản.
-- Đọc tham số `id` để hiển thị đúng bài viết chi tiết.
+- Chuẩn hóa yêu cầu chức năng và phạm vi bài tập.
+- Đồng bộ UI guideline với những gì đã triển khai trong app.
+- Giúp theo dõi phạm vi hiện tại trước khi mở rộng thêm tính năng.
 
-## Phạm vi bài tập
+## Trạng thái triển khai hiện tại
 
-Trong phạm vi:
-- 3 trang chính: Trang chủ (`/`), Danh sách blog (`/blog`), Chi tiết bài viết (`/blog/[id]`).
-- Có `Navbar` dùng chung để chuyển trang.
-- Giao diện rõ ràng, dễ đọc, bố cục gọn.
+- Các route đang có: `/`, `/about`, `/blog`, `/blog/[id]`, `/_not-found`.
+- Layout dùng chung có `Navbar` + `Footer`.
+- Trang chủ và trang blog áp dụng layout 2 cột (main + sidebar).
+- Sidebar gồm search UI, popular posts, categories.
+- Dữ liệu đang dùng Mock Data nội bộ.
 
-Ngoài phạm vi:
-- Database, đăng nhập, phân quyền.
-- SEO nâng cao (OG/Twitter Card/sitemap/robots).
-- Dark/Light mode, search/filter/pagination.
+## Tech stack
 
-## Tech Stack
-
-- **Framework:** [Next.js](https://nextjs.org/) (App Router)
-- **Styling:** CSS cơ bản hoặc [Tailwind CSS](https://tailwindcss.com/)
-- **Data source:** Mock Data hoặc file tĩnh đơn giản
-
-## Cấu trúc thư mục tham chiếu
-
-```text
-next-blog-web/
-├── src/
-│   ├── app/
-│   │   ├── layout.tsx           # Layout chung + Navbar/Footer
-│   │   ├── page.tsx             # Trang chủ
-│   │   └── blog/
-│   │       ├── page.tsx         # Danh sách bài viết
-│   │       └── [id]/page.tsx    # Chi tiết bài viết
-│   ├── components/
-│   │   ├── layout/
-│   │   └── blog/
-│   └── data/                    # Mock data cho bài viết
-└── public/
-```
+- Next.js App Router
+- React + TypeScript
+- Tailwind CSS v4
 
 ## Tài liệu liên quan
 
-- Chi tiết yêu cầu chức năng: `docs/SRS.md`
-- Gợi ý giao diện: `docs/UI_Design_Guideline.md`
+- Đặc tả yêu cầu phần mềm: `docs/SRS.md`
+- Guideline giao diện: `docs/UI_Design_Guideline.md`
+- README dự án chạy code: `next-blog-web/README.md`
