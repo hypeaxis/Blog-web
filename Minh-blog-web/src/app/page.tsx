@@ -22,7 +22,7 @@ export default async function Home({ searchParams }: HomePageProps) {
   ]);
 
   const featuredPosts = filteredPosts.slice(0, 3);
-  const recentPosts = filteredPosts.slice(0, 4);
+  const recentPosts = filteredPosts.slice(0, 3);
 
   return (
     <main className="mx-auto w-full max-w-7xl px-6 py-12 sm:px-10 sm:py-16">

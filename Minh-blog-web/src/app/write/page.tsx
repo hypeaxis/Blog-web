@@ -58,7 +58,7 @@ export default function WritePostPage() {
         return;
       }
 
-      router.push(`/blog/${encodeURIComponent(payload.post.id)}`);
+      router.push("not-found");
     } catch {
       setError("Có lỗi xảy ra khi gửi bài viết.");
     } finally {
