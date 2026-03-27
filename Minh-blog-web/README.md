@@ -1,14 +1,16 @@
 # Next.js Blog Web (Practice)
 
-Dự án thực hành Next.js App Router với giao diện **Minimalist Professional**, dùng Mock Data để hiển thị nội dung blog.
+Dự án thực hành Next.js App Router với giao diện **Minimalist Professional**.
 
 ## Tính năng hiện có
 
-- Trang chủ `/`: intro + featured posts + recent posts + sidebar.
-- Trang blog `/blog`: danh sách bài viết + sidebar + pagination UI.
-- Trang chi tiết `/blog/[id]`: tiêu đề, meta, nội dung, tags, share actions.
+- Trang chủ `/`: featured posts + recent posts + sidebar có search/category.
+- Trang blog `/blog`: danh sách bài viết + lọc + phân trang.
+- Trang chi tiết `/blog/[id]`: tiêu đề, tác giả, nội dung, tags.
+- Trang viết bài `/write`: chỉ cho user đã đăng nhập Google.
 - Trang `About` tại `/about`.
 - Trang `404` custom (`not-found`).
+- API posts `/api/posts` để đọc/tạo bài viết.
 - Layout dùng chung: Navbar + Footer cho toàn site.
 
 ## Công nghệ
@@ -17,7 +19,8 @@ Dự án thực hành Next.js App Router với giao diện **Minimalist Professi
 - React 19
 - TypeScript
 - Tailwind CSS v4
-- NextAuth route scaffold (`/api/auth/[...nextauth]`)
+- NextAuth (Google OAuth + JWT Session)
+- Vercel Blob (không DB quan hệ)
 
 ## Chạy dự án
 
@@ -28,12 +31,41 @@ npm run dev
 
 Mở `http://localhost:3000`.
 
+## Cấu hình môi trường
+
+1. Tạo file env local từ mẫu:
+
+```bash
+cp .env.example .env.local
+```
+
+2. Điền giá trị thật cho các biến:
+- `NEXTAUTH_URL`
+- `NEXTAUTH_SECRET`
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+- `BLOB_READ_WRITE_TOKEN` (khuyến nghị cho production)
+
+Nếu không có `BLOB_READ_WRITE_TOKEN`, bài viết mới chỉ lưu in-memory (không bền vững khi deploy serverless).
+
 ## Scripts
 
 - `npm run dev` — chạy môi trường phát triển
 - `npm run build` — build production
 - `npm run start` — chạy production sau build
 - `npm run lint` — kiểm tra lint
+
+## Deploy bằng GitHub -> Vercel
+
+1. Push source code lên GitHub (không push `.env.local`).
+2. Import repo trên Vercel.
+3. Vào Project Settings -> Environment Variables và thêm toàn bộ biến trong `.env.example`.
+4. Cập nhật `NEXTAUTH_URL` đúng domain production (ví dụ `https://your-app.vercel.app`).
+5. Trong Google Cloud Console, thêm callback URL:
+   - `https://your-app.vercel.app/api/auth/callback/google`
+6. Redeploy sau khi set env.
+
+Lưu ý bảo mật: nếu secret đã từng lộ trong quá trình dev, hãy rotate lại trước khi production.
 
 ## Cấu trúc chính
 
@@ -45,15 +77,22 @@ next-blog-web/
 │   │   ├── page.tsx
 │   │   ├── about/page.tsx
 │   │   ├── not-found.tsx
+│   │   ├── login/page.tsx
+│   │   ├── write/page.tsx
 │   │   ├── blog/
 │   │   │   ├── page.tsx
 │   │   │   └── [id]/page.tsx
 │   │   └── api/auth/[...nextauth]/route.ts
+│   │   └── api/posts/route.ts
 │   ├── components/
 │   │   ├── layout/Navbar.tsx
 │   │   └── blog/
 │   │      ├── PostCard.tsx
 │   │      └── BlogSidebar.tsx
+│   ├── lib/
+│   │   └── posts.ts
+│   └── types/
+│       └── post.ts
 │   └── data/
 │      ├── mockPosts.ts
 │      └── postUi.ts

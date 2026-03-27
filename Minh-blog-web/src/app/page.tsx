@@ -1,11 +1,28 @@
 import Link from "next/link";
 import BlogSidebar from "@/components/blog/BlogSidebar";
 import PostCard from "@/components/blog/PostCard";
-import { mockPosts } from "@/data/mockPosts";
+import { getCategories, getPopularPosts, listPosts } from "@/lib/posts";
 
-export default function Home() {
-  const featuredPosts = mockPosts.slice(0, 3);
-  const recentPosts = mockPosts.slice(0, 4);
+type HomePageProps = {
+  searchParams: Promise<{
+    q?: string;
+    category?: string;
+  }>;
+};
+
+export default async function Home({ searchParams }: HomePageProps) {
+  const { q, category } = await searchParams;
+  const query = q?.trim();
+  const selectedCategory = category?.trim();
+
+  const [{ items: filteredPosts }, categories, popularPosts] = await Promise.all([
+    listPosts({ q: query, category: selectedCategory, page: 1, limit: 12 }),
+    getCategories(),
+    getPopularPosts(4),
+  ]);
+
+  const featuredPosts = filteredPosts.slice(0, 3);
+  const recentPosts = filteredPosts.slice(0, 4);
 
   return (
     <main className="mx-auto w-full max-w-7xl px-6 py-12 sm:px-10 sm:py-16">
@@ -16,6 +33,12 @@ export default function Home() {
         <p className="mt-4 max-w-3xl text-base leading-relaxed text-gray-700 sm:text-lg">
           Dự án được hoàn thành với mục đích học tập và thực hành các tính năng của Next.js 13, đặc biệt là App Router. Nội dung của blog sẽ xoay quanh các chủ đề về lập trình, công nghệ và phát triển web.
         </p>
+        {(query || selectedCategory) && (
+          <p className="mt-4 text-sm text-gray-600">
+            Bộ lọc hiện tại: {query ? `Từ khóa "${query}"` : "Tất cả"}
+            {selectedCategory ? ` · Category ${selectedCategory}` : ""}
+          </p>
+        )}
       </section>
 
       <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
@@ -33,7 +56,9 @@ export default function Home() {
                   >
                     {post.title}
                   </Link>
-                  <p className="mt-2 text-sm text-gray-500">{post.date}</p>
+                  <p className="mt-2 text-sm text-gray-500">
+                    {new Date(post.createdAt).toLocaleDateString("vi-VN")}
+                  </p>
                 </article>
               ))}
             </div>
@@ -42,9 +67,11 @@ export default function Home() {
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-gray-900">Recent Posts</h2>
             <div className="mt-6 space-y-8">
-              {recentPosts.map((post) => (
-                <PostCard key={post.id} {...post} />
-              ))}
+              {recentPosts.length > 0 ? (
+                recentPosts.map((post) => <PostCard key={post.id} {...post} />)
+              ) : (
+                <p className="text-sm text-gray-600">Không tìm thấy bài viết phù hợp.</p>
+              )}
             </div>
             <div className="mt-8">
               <Link
@@ -57,7 +84,13 @@ export default function Home() {
           </div>
         </section>
 
-        <BlogSidebar />
+        <BlogSidebar
+          basePath="/"
+          categories={categories}
+          popularPosts={popularPosts}
+          currentQuery={query}
+          currentCategory={selectedCategory}
+        />
       </div>
     </main>
   );

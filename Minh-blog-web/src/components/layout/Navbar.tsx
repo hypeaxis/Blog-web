@@ -37,6 +37,12 @@ export default function Navbar() {
             <span className="text-xs text-gray-500">Loading...</span>
           ) : isLoggedIn ? (
             <div className="flex items-center gap-3">
+              <Link
+                href="/write"
+                className="rounded bg-gray-900 px-3 py-1 text-xs font-semibold text-white hover:bg-black"
+              >
+                Write
+              </Link>
               <span className="hidden text-xs text-gray-600 sm:inline">
                 {session?.user?.name ?? session?.user?.email}
               </span>
