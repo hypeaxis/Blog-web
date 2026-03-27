@@ -27,7 +27,6 @@ export default function PostCard({ id, title, excerpt, date }: PostCardProps) {
       <p className="mt-3 text-sm text-gray-500">
         {date} · {meta.author}
       </p>
-      <div className="mt-4 h-40 border border-gray-200 bg-gray-50" />
       <p className="mt-5 text-base leading-relaxed text-gray-700">
         {excerpt}
       </p>

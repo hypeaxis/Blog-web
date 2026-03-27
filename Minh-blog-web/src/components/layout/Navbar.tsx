@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
-import AuthButton from "@/components/AuthButton";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -33,15 +32,7 @@ export default function Navbar() {
           >
             ⌕
           </button>
-          <Link href="#" className="text-xs font-semibold hover:text-orange-600">
-            FB
-          </Link>
-          <Link href="#" className="text-xs font-semibold hover:text-orange-600">
-            TW
-          </Link>
-          <Link href="#" className="text-xs font-semibold hover:text-orange-600">
-            GH
-          </Link>
+
           {status === "loading" ? (
             <span className="text-xs text-gray-500">Loading...</span>
           ) : isLoggedIn ? (
@@ -57,12 +48,12 @@ export default function Navbar() {
               </button>
             </div>
           ) : (
-            <button
-              onClick={() => signIn("google")}
+            <Link
+              href="/login"
               className="rounded bg-orange-600 px-3 py-1 text-xs font-semibold text-white hover:bg-orange-700"
             >
               Login with Google
-            </button>
+            </Link>
           )}
         </div>
       </nav>

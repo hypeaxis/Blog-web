@@ -12,7 +12,7 @@ const handler = NextAuth({
     strategy: "jwt", // Không dùng DB nên lưu session bằng JWT Token
   },
   callbacks: {
-    async jwt({ token, account, profile }) {
+    async jwt({ token, account }) {
       if (account?.provider) {
         token.provider = account.provider;
       }
