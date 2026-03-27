@@ -1,4 +1,4 @@
-import { mockPosts, type MockPost } from "@/data/mockPosts";
+import type { MockPost } from "@/data/mockPosts";
 
 type PostUiMeta = {
   author: string;
@@ -43,26 +43,4 @@ export function getPostUiMeta(post: MockPost): PostUiMeta {
     tags: firstTag === secondTag ? [firstTag] : [firstTag, secondTag],
     comments,
   };
-}
-
-export function getPopularPosts(limit = 4) {
-  return [...mockPosts]
-    .slice(0, limit)
-    .map((post) => ({
-      ...post,
-      ...getPostUiMeta(post),
-    }));
-}
-
-export function getCategories() {
-  const tags = new Set<string>();
-
-  for (const post of mockPosts) {
-    const meta = getPostUiMeta(post);
-    for (const tag of meta.tags) {
-      tags.add(tag);
-    }
-  }
-
-  return Array.from(tags).sort();
 }
