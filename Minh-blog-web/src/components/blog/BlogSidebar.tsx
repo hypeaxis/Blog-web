@@ -72,7 +72,12 @@ export default function BlogSidebar({
         <div className="mt-4 space-y-4">
           {popularPosts.map((post) => (
             <article key={post.id} className="flex gap-3">
-              <div className="h-12 w-12 shrink-0 border border-gray-200 bg-gray-100" />
+              <img
+                src="https://picsum.photos/200/300"
+                alt={post.title}
+                className="h-12 w-12 shrink-0 rounded-sm border border-gray-200 object-cover"
+                loading="lazy"
+              />
               <div>
                 <Link
                   href={`/blog/${encodeURIComponent(post.id)}`}

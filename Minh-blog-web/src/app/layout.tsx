@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Next.js Blog web",
+  title: "DevBlog",
   description: "Blog thực hành Next.js App Router - Minimalist Professional UI",
 };
 

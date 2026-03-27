@@ -40,7 +40,11 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
         </p>
       </header>
 
-      <div className="mt-8 h-64 border border-gray-200 bg-gray-50" />
+      <img
+        src="https://picsum.photos/400"
+        alt={post.title}
+        className="mt-8 h-64 w-full rounded-md border border-gray-200 object-cover sm:h-72 lg:h-80"
+      />
 
       <article className="mt-10 space-y-6 text-lg leading-relaxed text-gray-700">
         {paragraphs.map((paragraph) => (
