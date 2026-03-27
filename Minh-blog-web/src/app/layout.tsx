@@ -30,7 +30,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-white text-black">
-        {/* 2. Bọc toàn bộ ứng dụng bằng AuthProvider */}
+        {/* Bọc toàn bộ ứng dụng bằng AuthProvider */}
         <AuthProvider>
           <Navbar />
           <div className="flex-1">{children}</div>

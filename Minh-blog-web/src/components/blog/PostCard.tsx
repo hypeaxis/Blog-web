@@ -15,11 +15,12 @@ export default function PostCard({
   tags,
 }: PostCardProps) {
   const formattedDate = new Date(createdAt).toLocaleDateString("vi-VN");
+  const postHref = `/blog/${encodeURIComponent(id)}`;
 
   return (
     <article className="border-b border-gray-200 pb-10">
       <h2 className="text-3xl font-bold tracking-tight text-gray-900 leading-tight">
-        <Link href={`/blog/${id}`} className="hover:text-orange-600">
+        <Link href={postHref} className="hover:text-orange-600">
           {title}
         </Link>
       </h2>

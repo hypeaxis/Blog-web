@@ -75,7 +75,7 @@ export default function BlogSidebar({
               <div className="h-12 w-12 shrink-0 border border-gray-200 bg-gray-100" />
               <div>
                 <Link
-                  href={`/blog/${post.id}`}
+                  href={`/blog/${encodeURIComponent(post.id)}`}
                   className="text-sm font-semibold text-gray-800 hover:text-orange-600"
                 >
                   {post.title}

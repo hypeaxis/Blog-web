@@ -3,115 +3,128 @@
 ## 1. Giới thiệu
 ### 1.1 Mục tiêu
 Dự án là bài tập thực hành Next.js nhằm rèn luyện:
-- Kiến trúc App Router.
-- Tổ chức layout/component tái sử dụng.
-- Dynamic routing cho trang chi tiết bài viết.
-- Tích hợp xác thực người dùng (Authentication) cơ bản với NextAuth.js.
+- Kiến trúc App Router và chia layout/component tái sử dụng.
+- Dynamic routing cho trang chi tiết bài viết theo id (`/blog/[id]`).
+- Tích hợp xác thực Google OAuth với NextAuth (JWT session, không dùng DB quan hệ).
+- Xây luồng tạo bài viết sau đăng nhập.
+- Triển khai tìm kiếm, lọc category và phân trang trên danh sách bài viết.
 
 ### 1.2 Phạm vi
 **Trong phạm vi hiện tại:**
-- Render nội dung blog từ Mock Data.
-- Điều hướng giữa các trang bằng Link client-side.
-- Layout responsive 1 cột/2 cột tùy trang.
-- Sidebar hiển thị search UI, popular posts, categories.
-- Luồng Đăng nhập / Đăng ký cơ bản (UI & Logic Session) dùng NextAuth.
+- Trang Home, Blog list, Blog detail, About, Login, Write post.
+- Xác thực Google qua NextAuth.
+- Tạo bài viết qua API sau khi đăng nhập.
+- Search + category filter thông qua URL query params.
+- Dữ liệu bài viết theo id, có tags và tác giả.
+- Deploy lên Vercel và sử dụng Blob storage (không dùng database quan hệ).
 
 **Ngoài phạm vi:**
-- Database/CMS thực tế cho bài viết (vẫn dùng Mock).
-- Chức năng tìm kiếm, lọc, phân trang backend (chỉ có UI pagination).
-- Upload ảnh thật, quản trị nội dung.
-- Phân quyền (Role-based) phức tạp (chỉ dừng ở mức Có/Không đăng nhập).
+- Dashboard quản trị CMS đầy đủ (duyệt bài, role phức tạp).
+- Upload media lớn và xử lý ảnh nâng cao.
+- Hệ thống bình luận/reaction realtime.
+- Full-text search engine chuyên dụng.
 
 ## 2. Công nghệ sử dụng
 - **Framework:** Next.js 16 (App Router, TypeScript).
-- **UI:** Tailwind CSS v4, Lucide React (Icons).
-- **Data:** Mock Data nội bộ (`src/data/mockPosts.ts`, `mockUsers.ts`).
-- **Authentication:** NextAuth.js (Auth.js v5) sử dụng Credentials Provider.
+- **UI:** Tailwind CSS v4.
+- **Authentication:** NextAuth.js với Google Provider, strategy `jwt`.
+- **Data layer:** Service `posts` + Vercel Blob (`@vercel/blob`).
+- **Fallback dữ liệu:** seed từ `mockPosts` cho local/dev khi chưa cấu hình Blob token.
 
 ## 3. Yêu cầu chức năng
 
 ### 3.1 Trang chủ (`/`)
-- Hiển thị phần giới thiệu ngắn về dự án.
-- Hiển thị nhóm bài viết nổi bật (featured posts).
-- Hiển thị danh sách bài viết gần đây (recent posts).
-- Có CTA dẫn tới trang danh sách blog.
-- Trên desktop: layout 2 cột (main content + sidebar).
+- Hiển thị phần intro.
+- Hiển thị featured posts và recent posts.
+- Hiển thị sidebar: search, popular posts, categories.
+- Hỗ trợ query `q` và `category` để lọc bài viết trên trang chủ.
 
 ### 3.2 Trang danh sách blog (`/blog`)
-- Hiển thị toàn bộ danh sách bài viết từ Mock Data.
-- Mỗi bài viết hiển thị: tiêu đề, ngày đăng, tác giả (meta), excerpt, tags.
-- Có cụm nút phân trang giao diện: “Trang trước”, “Trang sau” (UI-only).
-- Có sidebar ở cột phải: search UI, popular posts, categories.
+- Hiển thị danh sách bài viết có phân trang.
+- Hỗ trợ lọc theo từ khóa (`q`) và category (`category`).
+- Hiển thị trạng thái khi không có kết quả.
+- Sidebar đồng bộ với bộ lọc hiện tại.
 
 ### 3.3 Trang chi tiết bài viết (`/blog/[id]`)
-- Đọc `id` từ URL để render đúng bài viết.
-- Hiển thị header bài viết: tiêu đề, ngày đăng, tác giả.
-- Hiển thị nội dung chi tiết theo từng đoạn.
-- Có nút “Quay lại danh sách”.
-- Có footer bài viết: tags và nhóm nút chia sẻ (UI-only).
-- Nếu không có bài viết theo `id`, trả về trang 404.
+- Đọc `id` từ URL để lấy đúng bài viết.
+- Hiển thị tiêu đề, ngày đăng, tác giả, nội dung, tags.
+- Có nút quay lại danh sách.
+- Nếu không tìm thấy bài viết theo `id`, trả về 404.
 
 ### 3.4 Trang About (`/about`)
 - Hiển thị mô tả ngắn về dự án/blog.
 
-### 3.5 Xác thực người dùng (Authentication)
-- **Navbar State:** 
-  - Khách: Hiển thị nút "Đăng nhập" dẫn tới `/login`.
-  - Đã đăng nhập: Hiển thị tên/avatar người dùng và nút "Đăng xuất" (kết thúc session).
-- **Trang Đăng nhập (`/login`):**
-  - Form nhập Email và Password.
-  - Xử lý xác thực qua NextAuth (so khớp với Mock Users).
-  - Hiển thị lỗi nếu sai thông tin.
-- **Trang Đăng ký (`/register`):**
-  - Form nhập Tên, Email, Password, Xác nhận Password.
-  - Validate form cơ bản ở client-side.
-  - (Mô phỏng) Thêm user vào Mock Data và chuyển hướng sang Login.
+### 3.5 Xác thực người dùng
+- **Navbar state:**
+  - Khách: hiển thị nút login dẫn tới `/login`.
+  - Đã đăng nhập: hiển thị thông tin user, nút `Write`, nút logout.
+- **Trang Login (`/login`):**
+  - Đăng nhập bằng Google OAuth.
+  - Hỗ trợ callback URL để quay lại trang cần tiếp tục.
 
-### 3.6 Trang 404 (`/_not-found`)
+### 3.6 Tạo bài viết (`/write`)
+- Chỉ user đã đăng nhập mới tạo được bài viết.
+- Form gồm: title, excerpt, content, tags.
+- Submit gọi API `/api/posts` (POST).
+- Tạo thành công sẽ điều hướng sang `/blog/{id}`.
+
+### 3.7 API bài viết (`/api/posts`)
+- **GET:** trả về danh sách bài viết theo `q`, `category`, `page`, `limit`.
+- **POST:** tạo bài viết mới, yêu cầu phiên đăng nhập hợp lệ.
+
+### 3.8 Trang 404 (`/_not-found`)
 - Hiển thị thông báo không tìm thấy trang và link quay về trang chủ.
 
-## 4. Yêu cầu UI/UX
-- Phong cách tối giản chuyên nghiệp, nền sáng, chữ rõ ràng.
-- Navbar trên cùng: logo blog, menu điều hướng, search icon, **trạng thái user**.
-- Footer chung toàn site: bản quyền + “Powered by Next.js”.
-- Màu nhấn dùng tông đỏ/cam cho CTA, trạng thái hover, và active focus của form inputs.
-- Form xác thực thiết kế dạng Card ra giữa màn hình.
-- Responsive:
-  - Mobile: ưu tiên 1 cột.
-  - Desktop: trang chủ và blog list dùng 2 cột, auth dùng 1 cột căn giữa.
+## 4. Yêu cầu phi chức năng
+- **Responsive:**
+  - Mobile ưu tiên 1 cột.
+  - Desktop Home/Blog sử dụng layout 2 cột.
+- **Bảo mật:**
+  - Không commit `.env.local`.
+  - Quản lý secret qua Vercel Environment Variables.
+- **Vận hành:**
+  - Build và lint pass trước deploy.
+  - Nếu không có `BLOB_READ_WRITE_TOKEN`, dữ liệu tạo mới không đảm bảo tồn tại bền vững sau khi scale/restart serverless.
 
-## 5. Cấu trúc thư mục chính
+## 5. Cấu trúc thư mục chính (cập nhật)
 
 ```text
-next-blog-web/
+Minh-blog-web/
 ├─ src/
 │  ├─ app/
 │  │  ├─ layout.tsx
 │  │  ├─ page.tsx
 │  │  ├─ about/page.tsx
+│  │  ├─ login/page.tsx
+│  │  ├─ write/page.tsx
 │  │  ├─ not-found.tsx
-│  │  ├─ (auth)/           <-- Nhóm route xác thực
-│  │  │  ├─ login/page.tsx
-│  │  │  └─ register/page.tsx
 │  │  ├─ blog/
 │  │  │  ├─ page.tsx
 │  │  │  └─ [id]/page.tsx
-│  │  └─ api/auth/[...nextauth]/route.ts <-- Endpoint xử lý NextAuth
+│  │  └─ api/
+│  │     ├─ auth/[...nextauth]/route.ts
+│  │     └─ posts/route.ts
 │  ├─ components/
 │  │  ├─ layout/Navbar.tsx
-│  │  ├─ blog/
-│  │  │  ├─ PostCard.tsx
-│  │  │  └─ BlogSidebar.tsx
-│  │  └─ auth/             <-- Components cho form
-│  │     ├─ LoginForm.tsx
-│  │     └─ RegisterForm.tsx
+│  │  └─ blog/
+│  │     ├─ PostCard.tsx
+│  │     └─ BlogSidebar.tsx
 │  ├─ lib/
-│  │  └─ auth.ts           <-- Cấu hình NextAuth
+│  │  └─ posts.ts
+│  ├─ types/
+│  │  └─ post.ts
 │  └─ data/
 │     ├─ mockPosts.ts
-│     ├─ mockUsers.ts      <-- Data giả lập user
 │     └─ postUi.ts
 └─ docs/
    ├─ README.md
    ├─ SRS.md
    └─ UI_Design_Guideline.md
+```
+
+## 6. Tiêu chí hoàn thành
+- Đăng nhập Google thành công trên local và production.
+- Tạo bài viết mới thành công khi đã đăng nhập.
+- Bài viết mới xuất hiện trên Home/Blog list và mở được trang detail theo id.
+- Search/category hoạt động đúng theo URL query params.
+- Build production thành công và deploy được trên Vercel.

@@ -16,6 +16,10 @@ function normalizeTag(tag: string) {
   return tag.trim().replace(/\s+/g, " ");
 }
 
+function normalizePostId(id: string) {
+  return id.trim().toLowerCase();
+}
+
 function buildSeedPosts(): BlogPost[] {
   return mockPosts.map((post) => {
     const meta = getPostUiMeta(post);
@@ -150,8 +154,17 @@ export async function listPosts(options: PostListOptions = {}): Promise<PostList
 }
 
 export async function getPostById(id: string): Promise<BlogPost | null> {
+  const normalizedId = normalizePostId(id);
+  if (!normalizedId) {
+    return null;
+  }
+
   const posts = await readAllPosts();
-  return posts.find((post) => post.id === id && post.status === "published") ?? null;
+  return (
+    posts.find(
+      (post) => normalizePostId(post.id) === normalizedId && post.status === "published",
+    ) ?? null
+  );
 }
 
 export async function getCategories(): Promise<string[]> {

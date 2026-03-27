@@ -8,7 +8,13 @@ type BlogDetailPageProps = {
 
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const { id } = await params;
-  const post = await getPostById(id);
+  const decodedId = decodeURIComponent(id).trim();
+
+  if (!decodedId) {
+    notFound();
+  }
+
+  const post = await getPostById(decodedId);
 
   if (!post) {
     notFound();
