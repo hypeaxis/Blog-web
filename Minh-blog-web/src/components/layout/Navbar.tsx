@@ -1,6 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import { signIn, signOut, useSession } from "next-auth/react";
+import AuthButton from "@/components/AuthButton";
 
 export default function Navbar() {
+  const { data: session, status } = useSession();
+  const isLoggedIn = Boolean(session?.user);
+
   return (
     <header className="border-b border-gray-200">
       <nav className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-6 py-5 sm:px-10 lg:flex-row lg:items-center lg:justify-between">
@@ -35,6 +42,28 @@ export default function Navbar() {
           <Link href="#" className="text-xs font-semibold hover:text-orange-600">
             GH
           </Link>
+          {status === "loading" ? (
+            <span className="text-xs text-gray-500">Loading...</span>
+          ) : isLoggedIn ? (
+            <div className="flex items-center gap-3">
+              <span className="hidden text-xs text-gray-600 sm:inline">
+                {session?.user?.name ?? session?.user?.email}
+              </span>
+              <button
+                onClick={() => signOut()}
+                className="rounded border border-orange-600 px-3 py-1 text-xs font-semibold text-orange-600 hover:bg-orange-50"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => signIn("google")}
+              className="rounded bg-orange-600 px-3 py-1 text-xs font-semibold text-white hover:bg-orange-700"
+            >
+              Login with Google
+            </button>
+          )}
         </div>
       </nav>
     </header>
