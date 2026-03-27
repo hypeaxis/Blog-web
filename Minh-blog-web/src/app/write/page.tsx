@@ -4,6 +4,8 @@ import Link from "next/link";
 import { FormEvent, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { usePosts } from "@/hooks/usePosts";
+import type { BlogPost } from "@/types/post";
 
 function parseTags(input: string) {
   return input
@@ -15,6 +17,7 @@ function parseTags(input: string) {
 export default function WritePostPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { addPost } = usePosts();
 
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
@@ -35,30 +38,32 @@ export default function WritePostPage() {
 
     setSubmitting(true);
     try {
-      const response = await fetch("/api/posts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          excerpt,
-          content,
-          tags: parseTags(tagsText),
-        }),
-      });
+      const cleanedTitle = title.trim();
+      const cleanedExcerpt = excerpt.trim();
+      const cleanedContent = content.trim();
 
-      const payload = (await response.json()) as {
-        post?: { id: string };
-        error?: string;
-      };
-
-      if (!response.ok || !payload.post) {
-        setError(payload.error ?? "Không thể tạo bài viết.");
+      if (!cleanedTitle || !cleanedExcerpt || !cleanedContent) {
+        setError("Vui lòng nhập đầy đủ tiêu đề, tóm tắt và nội dung.");
         return;
       }
 
-      router.push("not-found");
+      const timestamp = new Date().toISOString();
+      const newPost: BlogPost = {
+        id: crypto.randomUUID(),
+        title: cleanedTitle,
+        excerpt: cleanedExcerpt,
+        content: cleanedContent,
+        tags: parseTags(tagsText),
+        authorName: session?.user?.name?.trim() || "Anonymous",
+        authorEmail: session?.user?.email?.trim() || "",
+        createdAt: timestamp,
+        updatedAt: timestamp,
+        status: "published",
+      };
+
+      addPost(newPost);
+
+      router.push(`/blog/${encodeURIComponent(newPost.id)}`);
     } catch {
       setError("Có lỗi xảy ra khi gửi bài viết.");
     } finally {
