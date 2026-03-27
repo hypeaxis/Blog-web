@@ -20,7 +20,7 @@ Dự án thực hành Next.js App Router với giao diện **Minimalist Professi
 - TypeScript
 - Tailwind CSS v4
 - NextAuth (Google OAuth + JWT Session)
-- Vercel Blob (không DB quan hệ)
+- In-memory data store (không DB quan hệ)
 
 ## Chạy dự án
 
@@ -44,9 +44,8 @@ cp .env.example .env.local
 - `NEXTAUTH_SECRET`
 - `GOOGLE_CLIENT_ID`
 - `GOOGLE_CLIENT_SECRET`
-- `BLOB_READ_WRITE_TOKEN` (khuyến nghị cho production)
 
-Nếu không có `BLOB_READ_WRITE_TOKEN`, bài viết mới chỉ lưu in-memory (không bền vững khi deploy serverless).
+Dữ liệu bài viết đang lưu in-memory, nên bài viết tạo mới không bền vững sau khi server restart hoặc scale.
 
 ## Scripts
 

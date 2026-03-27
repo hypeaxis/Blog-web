@@ -1,9 +1,7 @@
-import { list, put } from "@vercel/blob";
 import { mockPosts } from "@/data/mockPosts";
 import { getPostUiMeta } from "@/data/postUi";
 import type { BlogPost, CreatePostInput, PostListOptions, PostListResult } from "@/types/post";
 
-const POSTS_INDEX_PATH = "posts/index.json";
 const DEFAULT_LIMIT = 10;
 
 let memoryPosts: BlogPost[] | null = null;
@@ -40,56 +38,8 @@ function buildSeedPosts(): BlogPost[] {
   });
 }
 
-function hasBlobToken() {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
-}
-
-async function readBlobPosts(): Promise<BlogPost[] | null> {
-  if (!hasBlobToken()) {
-    return null;
-  }
-
-  const result = await list({
-    prefix: POSTS_INDEX_PATH,
-    token: process.env.BLOB_READ_WRITE_TOKEN,
-  });
-  const indexBlob = result.blobs.find((blob) => blob.pathname === POSTS_INDEX_PATH);
-
-  if (!indexBlob) {
-    return null;
-  }
-
-  const response = await fetch(indexBlob.url, { cache: "no-store" });
-  if (!response.ok) {
-    return null;
-  }
-
-  const parsed = (await response.json()) as BlogPost[];
-  return Array.isArray(parsed) ? parsed : null;
-}
-
-async function writeBlobPosts(posts: BlogPost[]) {
-  if (!hasBlobToken()) {
-    return;
-  }
-
-  await put(POSTS_INDEX_PATH, JSON.stringify(posts, null, 2), {
-    access: "public",
-    addRandomSuffix: false,
-    contentType: "application/json",
-    token: process.env.BLOB_READ_WRITE_TOKEN,
-  });
-}
-
 async function readAllPosts(): Promise<BlogPost[]> {
   if (memoryPosts) {
-    return memoryPosts;
-  }
-
-  const blobPosts = await readBlobPosts();
-
-  if (blobPosts && blobPosts.length > 0) {
-    memoryPosts = blobPosts;
     return memoryPosts;
   }
 
@@ -99,7 +49,6 @@ async function readAllPosts(): Promise<BlogPost[]> {
 
 async function persistPosts(posts: BlogPost[]) {
   memoryPosts = posts;
-  await writeBlobPosts(posts);
 }
 
 function filterPosts(posts: BlogPost[], q?: string, category?: string) {

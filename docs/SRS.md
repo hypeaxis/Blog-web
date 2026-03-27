@@ -16,7 +16,7 @@ Dự án là bài tập thực hành Next.js nhằm rèn luyện:
 - Tạo bài viết qua API sau khi đăng nhập.
 - Search + category filter thông qua URL query params.
 - Dữ liệu bài viết theo id, có tags và tác giả.
-- Deploy lên Vercel và sử dụng Blob storage (không dùng database quan hệ).
+- Deploy lên Vercel, không dùng database quan hệ.
 
 **Ngoài phạm vi:**
 - Dashboard quản trị CMS đầy đủ (duyệt bài, role phức tạp).
@@ -28,8 +28,8 @@ Dự án là bài tập thực hành Next.js nhằm rèn luyện:
 - **Framework:** Next.js 16 (App Router, TypeScript).
 - **UI:** Tailwind CSS v4.
 - **Authentication:** NextAuth.js với Google Provider, strategy `jwt`.
-- **Data layer:** Service `posts` + Vercel Blob (`@vercel/blob`).
-- **Fallback dữ liệu:** seed từ `mockPosts` cho local/dev khi chưa cấu hình Blob token.
+- **Data layer:** Service `posts` lưu dữ liệu in-memory.
+- **Seed dữ liệu:** lấy từ `mockPosts` khi khởi tạo runtime.
 
 ## 3. Yêu cầu chức năng
 
@@ -84,7 +84,7 @@ Dự án là bài tập thực hành Next.js nhằm rèn luyện:
   - Quản lý secret qua Vercel Environment Variables.
 - **Vận hành:**
   - Build và lint pass trước deploy.
-  - Nếu không có `BLOB_READ_WRITE_TOKEN`, dữ liệu tạo mới không đảm bảo tồn tại bền vững sau khi scale/restart serverless.
+  - Dữ liệu tạo mới không đảm bảo tồn tại bền vững sau khi scale/restart serverless.
 
 ## 5. Cấu trúc thư mục chính (cập nhật)
 
