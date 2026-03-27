@@ -49,10 +49,6 @@ function LoginContent() {
           ) : null}
         </div>
 
-        <p className="mt-6 text-center text-xs text-gray-500">
-          Bằng việc đăng nhập, bạn đồng ý với điều khoản sử dụng.
-        </p>
-
         <div className="mt-6 text-center">
           <Link href="/" className="text-sm font-medium text-orange-600 hover:text-orange-700">
             Quay về trang chủ
