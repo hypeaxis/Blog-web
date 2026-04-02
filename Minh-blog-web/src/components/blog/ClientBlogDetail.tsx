@@ -2,14 +2,11 @@
 
 import Link from "next/link";
 import { usePosts } from "@/hooks/usePosts";
+import { normalizePostId } from "@/lib/utils";
 
 type ClientBlogDetailProps = {
   id: string;
 };
-
-function normalizePostId(id: string) {
-  return id.trim().toLowerCase();
-}
 
 export default function ClientBlogDetail({ id }: ClientBlogDetailProps) {
   const { posts } = usePosts();

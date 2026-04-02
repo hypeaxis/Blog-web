@@ -4,6 +4,7 @@ import Link from "next/link";
 import BlogSidebar from "@/components/blog/BlogSidebar";
 import PostCard from "@/components/blog/PostCard";
 import { usePosts } from "@/hooks/usePosts";
+import { normalizeTag, normalizeText } from "@/lib/utils";
 
 type ClientBlogListProps = {
   query?: string;
@@ -38,8 +39,8 @@ export default function ClientBlogList({
   page,
 }: ClientBlogListProps) {
   const { posts } = usePosts();
-  const normalizedQuery = query?.trim().toLowerCase();
-  const normalizedCategory = selectedCategory?.trim().toLowerCase();
+  const normalizedQuery = query ? normalizeText(query) : undefined;
+  const normalizedCategory = selectedCategory ? normalizeText(selectedCategory) : undefined;
 
   const publishedPosts = [...posts]
     .filter((post) => post.status === "published")
@@ -64,7 +65,7 @@ export default function ClientBlogList({
     new Set(
       publishedPosts
         .flatMap((post) => post.tags)
-        .map((tag) => tag.trim())
+        .map(normalizeTag)
         .filter(Boolean),
     ),
   ).sort((a, b) => a.localeCompare(b));

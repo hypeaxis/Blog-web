@@ -1,5 +1,6 @@
 import { mockPosts } from "@/data/mockPosts";
 import { getPostUiMeta } from "@/data/postUi";
+import { normalizePostId, normalizeTag, normalizeText } from "@/lib/utils";
 import type { BlogPost, CreatePostInput, PostListOptions, PostListResult } from "@/types/post";
 
 const DEFAULT_LIMIT = 10;
@@ -8,14 +9,6 @@ let memoryPosts: BlogPost[] | null = null;
 
 function nowIso() {
   return new Date().toISOString();
-}
-
-function normalizeTag(tag: string) {
-  return tag.trim().replace(/\s+/g, " ");
-}
-
-function normalizePostId(id: string) {
-  return id.trim().toLowerCase();
 }
 
 function buildSeedPosts(): BlogPost[] {
@@ -57,7 +50,7 @@ function filterPosts(posts: BlogPost[], q?: string, category?: string) {
   let filtered = posts;
 
   if (q) {
-    const term = q.trim().toLowerCase();
+    const term = normalizeText(q);
     if (term) {
       filtered = filtered.filter((post) => {
         const searchable = `${post.title}\n${post.excerpt}\n${post.content}`.toLowerCase();
@@ -67,7 +60,7 @@ function filterPosts(posts: BlogPost[], q?: string, category?: string) {
   }
 
   if (category) {
-    const normalized = category.trim().toLowerCase();
+    const normalized = normalizeText(category);
     if (normalized) {
       filtered = filtered.filter((post) =>
         post.tags.some((tag) => tag.toLowerCase() === normalized),
@@ -124,8 +117,9 @@ export async function getCategories(): Promise<string[]> {
 
   for (const post of posts) {
     for (const tag of post.tags) {
-      if (tag.trim()) {
-        tags.add(tag);
+      const normalizedTag = normalizeTag(tag);
+      if (normalizedTag) {
+        tags.add(normalizedTag);
       }
     }
   }

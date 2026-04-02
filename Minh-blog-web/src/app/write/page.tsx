@@ -5,14 +5,8 @@ import { FormEvent, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { usePosts } from "@/hooks/usePosts";
+import { parseTags } from "@/lib/utils";
 import type { BlogPost } from "@/types/post";
-
-function parseTags(input: string) {
-  return input
-    .split(",")
-    .map((tag) => tag.trim())
-    .filter(Boolean);
-}
 
 export default function WritePostPage() {
   const { data: session, status } = useSession();
