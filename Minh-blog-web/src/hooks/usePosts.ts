@@ -3,7 +3,7 @@ import { mockPosts, type MockPost } from "@/data/mockPosts";
 import type { BlogPost } from "@/types/post";
 import { getPostUiMeta } from "@/data/postUi";
 
-const STORAGE_KEY = "blog_posts_v2";
+const STORAGE_KEY = "blog_posts_v3";
 
 function toBlogPost(post: MockPost): BlogPost {
   const timestamp = `${post.date}T00:00:00.000Z`;
@@ -15,7 +15,7 @@ function toBlogPost(post: MockPost): BlogPost {
     excerpt: post.excerpt,
     content: post.content.join("\n\n"),
     // Sử dụng data từ meta:
-    tags: meta.tags, 
+    tags: post.tags, 
     authorName: meta.author,
     authorEmail: "",
     createdAt: timestamp,
