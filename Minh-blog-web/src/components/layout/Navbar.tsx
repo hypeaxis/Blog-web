@@ -26,12 +26,6 @@ export default function Navbar() {
           <Link href="/blog" className="font-medium hover:text-orange-600">
             Blog
           </Link>
-          <button
-            aria-label="Search"
-            className="font-semibold text-orange-600 hover:text-orange-700"
-          >
-            ⌕
-          </button>
 
           {status === "loading" ? (
             <span className="text-xs text-gray-500">Loading...</span>
