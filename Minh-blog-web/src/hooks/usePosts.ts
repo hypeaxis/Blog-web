@@ -1,19 +1,21 @@
 import { useState } from "react";
 import { mockPosts, type MockPost } from "@/data/mockPosts";
 import type { BlogPost } from "@/types/post";
+import { getPostUiMeta } from "@/data/postUi";
 
 const STORAGE_KEY = "blog_posts";
 
 function toBlogPost(post: MockPost): BlogPost {
   const timestamp = `${post.date}T00:00:00.000Z`;
+  const meta = getPostUiMeta(post);
 
   return {
     id: post.id,
     title: post.title,
     excerpt: post.excerpt,
     content: post.content.join("\n\n"),
-    tags: [],
-    authorName: "Anonymous",
+    tags: meta.tags || ["general"],
+    authorName: meta.author || "Anonymous",
     authorEmail: "",
     createdAt: timestamp,
     updatedAt: timestamp,

@@ -19,7 +19,7 @@ function normalizePostId(id: string) {
 }
 
 function buildSeedPosts(): BlogPost[] {
-  return mockPosts.map((post) => {
+  return mockPosts.map((post: any) => { 
     const meta = getPostUiMeta(post);
     const fallbackDate = `${post.date}T00:00:00.000Z`;
 
@@ -28,8 +28,10 @@ function buildSeedPosts(): BlogPost[] {
       title: post.title,
       excerpt: post.excerpt,
       content: post.content.join("\n\n"),
-      tags: meta.tags,
-      authorName: meta.author,
+      
+      tags: post.tags || meta?.tags || ["general"],
+      authorName: post.author || post.authorName || meta?.author || "Anonymous",
+      
       authorEmail: "author@devblog.local",
       createdAt: fallbackDate,
       updatedAt: fallbackDate,

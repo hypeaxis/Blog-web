@@ -108,7 +108,7 @@ export default function BlogSidebar({
                   : "font-semibold text-orange-600"
               }
             >
-              Tất cả
+              General
             </Link>
           </li>
           {categories.map((category) => (
